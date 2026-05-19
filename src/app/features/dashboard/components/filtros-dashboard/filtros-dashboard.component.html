@@ -1,0 +1,63 @@
+<section class="filters-panel">
+  <div class="filters-header">
+    <div>
+      <p class="kicker">Filtros</p>
+      <h2>Recorte analítico</h2>
+    </div>
+
+    <button type="button" class="reset-button" (click)="limpar()">
+      Limpar filtros
+    </button>
+  </div>
+
+  <div class="filters-grid">
+    <label>
+      <span>Ano inicial</span>
+      <select [value]="filtros.anoInicial" (change)="alterarAnoInicial($event)">
+        <option value="todos">Todos</option>
+        @for (ano of anos; track ano) {
+          <option [value]="ano">{{ ano }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      <span>Ano final</span>
+      <select [value]="filtros.anoFinal" (change)="alterarAnoFinal($event)">
+        <option value="todos">Todos</option>
+        @for (ano of anos; track ano) {
+          <option [value]="ano">{{ ano }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      <span>Município</span>
+      <select [value]="filtros.municipioId" (change)="alterarMunicipio($event)">
+        <option value="todos">Todos</option>
+        @for (municipio of municipios; track municipio.id) {
+          <option [value]="municipio.id">{{ municipio.nome }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      <span>Escola</span>
+      <select [value]="filtros.escolaId" (change)="alterarEscola($event)">
+        <option value="todos">Todas</option>
+        @for (escola of escolas; track escola.id) {
+          <option [value]="escola.id">{{ escola.nome }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      <span>Indicador</span>
+      <select [value]="filtros.indicador" (change)="alterarIndicador($event)">
+        @for (indicador of indicadores; track indicador.valor) {
+          <option [value]="indicador.valor">{{ indicador.label }}</option>
+        }
+      </select>
+    </label>
+  </div>
+</section>

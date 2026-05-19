@@ -1,0 +1,249 @@
+<section class="dashboard-page">
+  <header class="hero">
+    <div>
+      <p class="eyebrow">DAC | Análise de Dados Educacionais</p>
+      <h1>Dashboard Educacional - Mato Grosso do Sul</h1>
+      <p class="subtitle">
+        Análise histórica dos indicadores da rede pública de ensino entre 2018 e 2026
+      </p>
+    </div>
+
+    <div class="hero-card">
+      <span class="hero-label">Período analisado</span>
+      <strong>2018 - 2026</strong>
+      <p>Dados consumidos do backend ASP.NET via proxy no ambiente de desenvolvimento.</p>
+    </div>
+  </header>
+
+  <section class="filters-panel">
+    <div class="filters-header">
+      <div>
+        <p class="kicker">Filtros</p>
+        <h2>Recorte analítico</h2>
+      </div>
+
+      <button type="button" class="reset-button" (click)="limparFiltros()">
+        Limpar filtros
+      </button>
+    </div>
+
+    <div class="filters-grid">
+      <label>
+        <span>Ano inicial</span>
+        <select [value]="filtros().anoInicial" (change)="alterarAnoInicial($event)">
+          <option value="todos">Todos</option>
+          <option *ngFor="let ano of anos" [value]="ano">{{ ano }}</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Ano final</span>
+        <select [value]="filtros().anoFinal" (change)="alterarAnoFinal($event)">
+          <option value="todos">Todos</option>
+          <option *ngFor="let ano of anos" [value]="ano">{{ ano }}</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Município</span>
+        <select [value]="filtros().municipioId" (change)="alterarMunicipio($event)">
+          <option value="todos">Todos</option>
+          <option *ngFor="let municipio of municipios()" [value]="municipio.id">
+            {{ municipio.nome }}
+          </option>
+        </select>
+      </label>
+
+      <label>
+        <span>Escola</span>
+        <select [value]="filtros().escolaId" (change)="alterarEscola($event)">
+  <option value="todos">Todas as escolas</option>
+
+  <option
+    *ngFor="let escola of escolasFiltradas()"
+    [value]="escola.id">
+    {{ escola.nome }}
+  </option>
+</select>
+      </label>
+    </div>
+  </section>
+
+  <ng-container *ngIf="carregando(); else loadedContent">
+    <div class="loading-state" role="status" aria-live="polite">
+      <div class="spinner"></div>
+      <p>Carregando dados do dashboard...</p>
+    </div>
+  </ng-container>
+
+  <ng-template #loadedContent>
+    <ng-container *ngIf="semDados(); else dashboardContent">
+      <div class="empty-state" role="status" aria-live="polite">
+        <div class="empty-illustration"></div>
+        <h3>Nenhum dado encontrado</h3>
+        <p>Ajuste os filtros para visualizar escolas, gráficos e indicadores.</p>
+        <button type="button" (click)="limparFiltros()">Limpar filtros</button>
+      </div>
+    </ng-container>
+    <ng-template #dashboardContent>
+      <section class="charts-grid">
+        <article class="chart-card">
+          <div class="chart-header">
+            <div>
+              <p class="chart-kicker">Evolução histórica</p>
+              <h3>Taxa de aprovação ao longo do tempo</h3>
+            </div>
+          </div>
+          <div class="chart-area">
+            <canvas #evolucaoCanvas></canvas>
+          </div>
+        </article>
+
+        <article class="chart-card">
+          <div class="chart-header">
+            <div>
+              <p class="chart-kicker">Ranking municipal</p>
+              <h3>Municípios por abandono</h3>
+            </div>
+          </div>
+          <div class="chart-area">
+            <canvas #rankingCanvas></canvas>
+          </div>
+        </article>
+
+        <article class="chart-card chart-card--full">
+          <div class="chart-header">
+            <div>
+              <p class="chart-kicker">Distribuição geral</p>
+              <h3>Aprovados, reprovados e abandono</h3>
+            </div>
+          </div>
+          <div class="chart-area chart-area--doughnut">
+            <canvas #distribuicaoCanvas></canvas>
+          </div>
+        </article>
+      </section>
+
+      <section class="charts-grid-percentuais" style="margin-top: 2rem; margin-bottom: 2rem;">
+        <div class="panel-header" style="margin-bottom: 0.5rem;">
+          <div>
+            <p class="panel-kicker">Análise Detalhada</p>
+            <h2>Indicadores Percentuais e Totais</h2>
+          </div>
+        </div>
+        
+        <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+          * Observação: dados de aprovação, reprovação e abandono de 2026 ainda estão em apuração.
+        </p>
+        
+        <div class="charts-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 1rem;">
+          <article class="chart-card">
+            <div class="chart-header">
+              <div>
+                <h3>Percentual de aprovação</h3>
+              </div>
+            </div>
+            <div class="chart-area">
+              <canvas #percentualAprovacaoCanvas></canvas>
+            </div>
+          </article>
+          
+          <article class="chart-card">
+            <div class="chart-header">
+              <div>
+                <h3>Percentual de reprovação</h3>
+              </div>
+            </div>
+            <div class="chart-area">
+              <canvas #percentualReprovacaoCanvas></canvas>
+            </div>
+          </article>
+          
+          <article class="chart-card">
+            <div class="chart-header">
+              <div>
+                <h3>Taxa de abandono</h3>
+              </div>
+            </div>
+            <div class="chart-area">
+              <canvas #taxaAbandonoCanvas></canvas>
+            </div>
+          </article>
+        </div>
+
+        <div class="charts-grid" style="grid-template-columns: repeat(2, 1fr);">
+          <article class="chart-card">
+            <div class="chart-header">
+              <div>
+                <h3>Total de aprovados</h3>
+              </div>
+            </div>
+            <div class="chart-area">
+              <canvas #aprovadosCanvas></canvas>
+            </div>
+          </article>
+          
+          <article class="chart-card">
+            <div class="chart-header">
+              <div>
+                <h3>Total de reprovados</h3>
+              </div>
+            </div>
+            <div class="chart-area">
+              <canvas #reprovadosCanvas></canvas>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="cards-grid">
+        <article *ngFor="let card of cards()" class="card card--{{ card.tonalidade }}">
+          <p class="card-title">{{ card.titulo }}</p>
+          <strong class="card-value">{{ card.valor }}</strong>
+          <span class="card-subtitle">{{ card.observacao }}</span>
+        </article>
+      </section>
+
+      <section class="table-panel">
+        <div class="panel-header">
+          <div>
+            <p class="panel-kicker">Base analítica</p>
+            <h2>Escolas filtradas</h2>
+          </div>
+          <span>{{ tabela().length }} registros</span>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Escola</th>
+                <th>Município</th>
+                <th>Ano</th>
+                <th>Matrícula inicial</th>
+                <th>Aprovados</th>
+                <th>Reprovados</th>
+                <th>Abandono</th>
+                <th>Taxa de aprovação</th>
+                <th>Taxa de abandono</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of tabela()">
+                <td><strong>{{ item.escolaNome }}</strong></td>
+                <td>{{ item.municipioNome }}</td>
+                <td>{{ item.ano }}</td>
+                <td>{{ item.matriculaInicial }}</td>
+                <td>{{ item.aprovados }}</td>
+                <td>{{ item.reprovados }}</td>
+                <td>{{ item.abandono }}</td>
+                <td>{{ item.taxaAprovacao }}</td>
+                <td>{{ item.taxaAbandono }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </ng-template>
+  </ng-template>
+</section>

@@ -1,0 +1,29 @@
+.chart-card {
+  grid-column: span 12;
+  padding: 22px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow);
+}
+
+.chart-header {
+  margin-bottom: 14px;
+}
+
+.chart-kicker {
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.76rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+h3 {
+  font-size: 1.2rem;
+}
+
+.chart-area {
+  height: 300px;
+}

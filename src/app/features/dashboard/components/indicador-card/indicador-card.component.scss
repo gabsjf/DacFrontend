@@ -1,0 +1,72 @@
+.card {
+  min-height: 146px;
+  padding: 22px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  inset: auto -30px -42px auto;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(31, 91, 122, 0.14), transparent 68%);
+}
+
+.card-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.card-value {
+  font-size: clamp(1.7rem, 2vw, 2.35rem);
+  color: var(--text);
+}
+
+.card-subtitle {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.card--primary::before,
+.card--success::before,
+.card--warning::before,
+.card--danger::before,
+.card--neutral::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 5px;
+  border-radius: 999px;
+}
+
+.card--primary::before {
+  background: var(--primary);
+}
+
+.card--success::before {
+  background: var(--success);
+}
+
+.card--warning::before {
+  background: var(--warning);
+}
+
+.card--danger::before {
+  background: var(--danger);
+}
+
+.card--neutral::before {
+  background: #8f9ba8;
+}

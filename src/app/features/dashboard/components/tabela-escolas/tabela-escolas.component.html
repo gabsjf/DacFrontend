@@ -1,0 +1,34 @@
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Escola</th>
+        <th>Município</th>
+        <th>Ano</th>
+        <th>Matrícula inicial</th>
+        <th>Aprovados</th>
+        <th>Reprovados</th>
+        <th>Abandono</th>
+        <th>Taxa de aprovação</th>
+        <th>Taxa de abandono</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (item of escolas; track item.id) {
+        <tr>
+          <td>
+            <strong>{{ item.escolaNome }}</strong>
+          </td>
+          <td>{{ item.municipioNome }}</td>
+          <td>{{ item.ano }}</td>
+          <td>{{ item.matriculaInicial | number:'1.0-0' }}</td>
+          <td>{{ item.aprovados | number:'1.0-0' }}</td>
+          <td>{{ item.reprovados | number:'1.0-0' }}</td>
+          <td>{{ item.abandono | number:'1.0-0' }}</td>
+          <td>{{ item.taxaAprovacao | number:'1.1-1' }}%</td>
+          <td>{{ item.taxaAbandono | number:'1.1-1' }}%</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
